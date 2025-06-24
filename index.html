@@ -5,9 +5,6 @@
   <title>Decor Catalogue</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
-  console.log("sendData called!", data);
-  Telegram.WebApp.sendData()
   <style>
     body { font-family: sans-serif; margin: 24px; background: #fafaff; }
     .product { border: 1px solid #ddd; padding: 16px; margin-bottom: 16px; border-radius: 8px; }
@@ -55,15 +52,20 @@
       cart.push(product);
       document.getElementById('cart-status').textContent = `${product.name} added to cart!`;
 
+      // Prepare data for Telegram
+      const data = {
+        action: "add_to_cart",
+        product_id: product.id,
+        product_name: product.name,
+        price: product.price,
+        quantity: 1
+      };
+
+      console.log("sendData called!", data);
+
       // Send cart data to Telegram Bot and close the Mini App
       if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.sendData(JSON.stringify({
-          action: "add_to_cart",
-          product_id: product.id,
-          product_name: product.name,
-          price: product.price,
-          quantity: 1
-        }));
+        Telegram.WebApp.sendData(JSON.stringify(data));
       } else {
         alert("Telegram WebApp API not found.");
       }
